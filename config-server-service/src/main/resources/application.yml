@@ -1,0 +1,7 @@
+server:
+  port: 8888
+
+# show full health details at /healthlth
+endpoints:
+  health:
+    sensitive: false

@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: config-server-service
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/service-my-movies/config-mymovies
+          #uri: file://${HOME}/Desktop/code/configrepo
+          # Search in the 'server-config' directory of the repo. This generally wouldn't
+          # be used because the configs would be in the root directory, but because
+          # this example repo is hosting both the code and the configs, we're
+          # isolating the configuration files into their own directory.
+          #searchPaths: server-config
+
+# Eureka Client
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER:http://localhost:8761/eureka}

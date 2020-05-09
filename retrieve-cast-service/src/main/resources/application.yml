@@ -1,0 +1,11 @@
+# Name Service
+spring:
+  application:
+    name: retrieve-cast-service
+  cloud:
+    config:
+      env: default # optional
+      label: master # optional
+      uri: ${CONFIG_SERVER:http://localhost:8888} # optional
+      
+      

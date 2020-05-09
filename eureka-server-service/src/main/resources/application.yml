@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: eureka-server-service
+  cloud:
+    config:
+      env: default # optional
+      label: master # optional
+      uri: ${CONFIG_SERVER:http://localhost:8888} # optional
