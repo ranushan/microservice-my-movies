@@ -1,0 +1,415 @@
+version: '3.1'
+
+services:
+
+  config-server-service:
+    image: rr/config-server-service
+    container_name: "container-config-server-service"
+    build: ./config-server-service
+    restart: always
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-server-service:8761/eureka
+        -Dspring.profiles.active=default
+    depends_on:
+      - eureka-server-service
+    ports:
+    - '8888:8888'
+
+  discover-service:
+    image: rr/discover-service
+    container_name: "container-discover-service"
+    build: ./discover-service
+    restart: on-failure
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-server-service:8761/eureka
+        -DCONFIG_SERVER:http://config-server-service:8888
+        -Dspring.profiles.active=default
+    depends_on:
+      - eureka-server-service
+      - config-server-service
+    ports:
+      - '8007:8007'
+
+  eureka-server-service:
+    image: rr/eureka-server-service
+    container_name: "container-eureka-server-service"
+    build: ./eureka-server-service
+    restart: always
+    environment:
+      - JAVA_OPTS=
+        -DCONFIG_SERVER:http://config-server-service:8888
+        -Dspring.profiles.active=default
+    depends_on:
+      - config-server-service
+    ports:
+      - '8761:8761'
+
+  home-page-test-service:
+    image: rr/home-page-test-service
+    container_name: "container-home-page-test-service"
+    build: ./home-page-test-service
+    restart: on-failure
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-server-service:8761/eureka
+        -DCONFIG_SERVER:http://config-server-service:8888
+        -Dspring.profiles.active=default
+    depends_on:
+      - eureka-server-service
+      - config-server-service
+    ports:
+      - '8009:8009'
+
+  retrieve-backdrop-service:
+    image: rr/retrieve-backdrop-service
+    container_name: "container-retrieve-backdrop-service"
+    build: ./retrieve-backdrop-service
+    restart: on-failure
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-server-service:8761/eureka
+        -DCONFIG_SERVER:http://config-server-service:8888
+        -Dspring.profiles.active=default
+    depends_on:
+      - eureka-server-service
+      - config-server-service
+    ports:
+      - '8003:8003'
+
+  retrieve-cast-service:
+    image: rr/retrieve-cast-service
+    container_name: "container-retrieve-cast-service"
+    build: ./retrieve-cast-service
+    restart: on-failure
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-server-service:8761/eureka
+        -DCONFIG_SERVER:http://config-server-service:8888
+        -Dspring.profiles.active=default
+    depends_on:
+      - eureka-server-service
+      - config-server-service
+    ports:
+      - '8004:8004'
+
+  retrieve-credit-service:
+    image: rr/retrieve-credit-service
+    container_name: "container-retrieve-credit-service"
+    build: ./retrieve-credit-service
+    restart: on-failure
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-server-service:8761/eureka
+        -DCONFIG_SERVER:http://config-server-service:8888
+        -Dspring.profiles.active=default
+    depends_on:
+      - eureka-server-service
+      - config-server-service
+    ports:
+      - '8005:8005'
+
+  retrieve-crew-service:
+    image: rr/retrieve-crew-service
+    container_name: "container-retrieve-crew-service"
+    build: ./retrieve-crew-service
+    restart: on-failure
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-server-service:8761/eureka
+        -DCONFIG_SERVER:http://config-server-service:8888
+        -Dspring.profiles.active=default
+    depends_on:
+      - eureka-server-service
+      - config-server-service
+    ports:
+      - '8006:8006'
+
+  retrieve-genre-service:
+    image: rr/retrieve-genre-service
+    container_name: "container-retrieve-genre-service"
+    build: ./retrieve-genre-service
+    restart: on-failure
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-server-service:8761/eureka
+        -DCONFIG_SERVER:http://config-server-service:8888
+        -Dspring.profiles.active=default
+    depends_on:
+      - eureka-server-service
+      - config-server-service
+    ports:
+      - '8008:8008'
+
+  retrieve-image-service:
+    image: rr/retrieve-image-service
+    container_name: "container-retrieve-image-service"
+    build: ./retrieve-image-service
+    restart: on-failure
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-server-service:8761/eureka
+        -DCONFIG_SERVER:http://config-server-service:8888
+        -Dspring.profiles.active=default
+    depends_on:
+      - eureka-server-service
+      - config-server-service
+    ports:
+      - '8010:8010'
+
+  retrieve-keyword-service:
+    image: rr/retrieve-keyword-service
+    container_name: "container-retrieve-keyword-service"
+    build: ./retrieve-keyword-service
+    restart: on-failure
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-server-service:8761/eureka
+        -DCONFIG_SERVER:http://config-server-service:8888
+        -Dspring.profiles.active=default
+    depends_on:
+      - eureka-server-service
+      - config-server-service
+    ports:
+      - '8011:8011'
+
+  retrieve-keywords-service:
+    image: rr/retrieve-keywords-service
+    container_name: "container-retrieve-keywords-service"
+    build: ./retrieve-keywords-service
+    restart: on-failure
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-server-service:8761/eureka
+        -DCONFIG_SERVER:http://config-server-service:8888
+        -Dspring.profiles.active=default
+    depends_on:
+      - eureka-server-service
+      - config-server-service
+    ports:
+      - '8012:8012'
+
+  retrieve-list-genres-available-service:
+    image: rr/retrieve-list-genres-available-service
+    container_name: "container-retrieve-list-genres-available-service"
+    build: ./retrieve-list-genres-available-service
+    restart: on-failure
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-server-service:8761/eureka
+        -DCONFIG_SERVER:http://config-server-service:8888
+        -Dspring.profiles.active=default
+    depends_on:
+      - eureka-server-service
+      - config-server-service
+    ports:
+      - '8013:8013'
+
+  retrieve-movie-service:
+    image: rr/retrieve-movie-service
+    container_name: "container-retrieve-movie-service"
+    build: ./retrieve-movie-service
+    restart: on-failure
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-server-service:8761/eureka
+        -DCONFIG_SERVER:http://config-server-service:8888
+        -Dspring.profiles.active=default
+    depends_on:
+      - eureka-server-service
+      - config-server-service
+    ports:
+      - '8014:8014'
+
+  retrieve-posters-service:
+    image: rr/retrieve-posters-service
+    container_name: "container-retrieve-posters-service"
+    build: ./retrieve-posters-service
+    restart: on-failure
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-server-service:8761/eureka
+        -DCONFIG_SERVER:http://config-server-service:8888
+        -Dspring.profiles.active=default
+    depends_on:
+      - eureka-server-service
+      - config-server-service
+    ports:
+      - '8015:8015'
+
+  retrieve-production-companies-service:
+    image: rr/retrieve-production-companies-service
+    container_name: "container-retrieve-production-companies-service"
+    build: ./retrieve-production-companies-service
+    restart: on-failure
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-server-service:8761/eureka
+        -DCONFIG_SERVER:http://config-server-service:8888
+        -Dspring.profiles.active=default
+    depends_on:
+      - eureka-server-service
+      - config-server-service
+    ports:
+      - '8016:8016'
+
+  retrieve-production-countries-service:
+    image: rr/retrieve-production-countries-service
+    container_name: "container-retrieve-production-countries-service"
+    build: ./retrieve-production-countries-service
+    restart: on-failure
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-server-service:8761/eureka
+        -DCONFIG_SERVER:http://config-server-service:8888
+        -Dspring.profiles.active=default
+    depends_on:
+      - eureka-server-service
+      - config-server-service
+    ports:
+      - '8017:8017'
+
+  retrieve-release-dates-service:
+    image: rr/retrieve-release-dates-service
+    container_name: "container-retrieve-release-dates-service"
+    build: ./retrieve-release-dates-service
+    restart: on-failure
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-server-service:8761/eureka
+        -DCONFIG_SERVER:http://config-server-service:8888
+        -Dspring.profiles.active=default
+    depends_on:
+      - eureka-server-service
+      - config-server-service
+    ports:
+      - '8018:8018'
+
+  retrieve-result-release-dates-service:
+    image: rr/retrieve-result-release-dates-service
+    container_name: "container-retrieve-result-release-dates-service"
+    build: ./retrieve-result-release-dates-service
+    restart: on-failure
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-server-service:8761/eureka
+        -DCONFIG_SERVER:http://config-server-service:8888
+        -Dspring.profiles.active=default
+    depends_on:
+      - eureka-server-service
+      - config-server-service
+    ports:
+      - '8019:8019'
+
+  retrieve-review-service:
+    image: rr/retrieve-review-service
+    container_name: "container-retrieve-review-service"
+    build: ./retrieve-review-service
+    restart: on-failure
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-server-service:8761/eureka
+        -DCONFIG_SERVER:http://config-server-service:8888
+        -Dspring.profiles.active=default
+    depends_on:
+      - eureka-server-service
+      - config-server-service
+    ports:
+      - '8020:8020'
+
+  retrieve-reviews-service:
+    image: rr/retrieve-reviews-service
+    container_name: "container-retrieve-reviews-service"
+    build: ./retrieve-reviews-service
+    restart: on-failure
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-server-service:8761/eureka
+        -DCONFIG_SERVER:http://config-server-service:8888
+        -Dspring.profiles.active=default
+    depends_on:
+      - eureka-server-service
+      - config-server-service
+    ports:
+      - '8021:8021'
+
+  retrieve-spoken-languages-service:
+    image: rr/retrieve-spoken-languages-service
+    container_name: "container-retrieve-spoken-languages-service"
+    build: ./retrieve-spoken-languages-service
+    restart: on-failure
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-server-service:8761/eureka
+        -DCONFIG_SERVER:http://config-server-service:8888
+        -Dspring.profiles.active=default
+    depends_on:
+      - eureka-server-service
+      - config-server-service
+    ports:
+      - '8022:8022'
+
+  retrieve-video-service:
+    image: rr/retrieve-video-service
+    container_name: "container-retrieve-video-service"
+    build: ./retrieve-video-service
+    restart: on-failure
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-server-service:8761/eureka
+        -DCONFIG_SERVER:http://config-server-service:8888
+        -Dspring.profiles.active=default
+    depends_on:
+      - eureka-server-service
+      - config-server-service
+    ports:
+      - '8023:8023'
+
+  retrieve-videos-service:
+    image: rr/retrieve-videos-service
+    container_name: "container-retrieve-videos-service"
+    build: ./retrieve-videos-service
+    restart: on-failure
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-server-service:8761/eureka
+        -DCONFIG_SERVER:http://config-server-service:8888
+        -Dspring.profiles.active=default
+    depends_on:
+      - eureka-server-service
+      - config-server-service
+    ports:
+      - '8024:8024'
+
+  user-service:
+    image: rr/user-service
+    container_name: "container-user-service"
+    build: ./user-service
+    restart: on-failure
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-server-service:8761/eureka
+        -DCONFIG_SERVER:http://config-server-service:8888
+        -Dspring.profiles.active=default
+    depends_on:
+      - eureka-server-service
+      - config-server-service
+    ports:
+      - '8025:8025'
+
+  zuul-api-gateway-service:
+    image: rr/zuul-api-gateway-service
+    container_name: "container-zuul-api-gateway-service"
+    build: ./zuul-api-gateway-service
+    restart: always
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-server-service:8761/eureka
+        -DCONFIG_SERVER:http://config-server-service:8888
+        -Dspring.profiles.active=default
+    depends_on:
+      - eureka-server-service
+      - config-server-service
+    ports:
+      - '8000:8000'
