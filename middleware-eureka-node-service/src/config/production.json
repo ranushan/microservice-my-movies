@@ -1,0 +1,38 @@
+{
+    "env": {
+        "id" : "v1",
+        "name": "PROD"
+    },
+    "info": {
+        "dhr": {
+            "version" : {
+                "back-end": "0.0.1-XXX",
+                "front-end": "0.0.1",
+                "database": "0.0.1"
+            }
+        }
+    },
+    "app": {
+        "expose-host": "0.0.0.0",
+        "host": "http://localhost",
+        "port": 8088,
+        "name": "Server Service"
+    },
+    "mongodb": {
+        "host": "mongodb://127.0.0.1",
+        "port": 12345,
+        "name": "digitalhr#prod"
+    },
+    "web-service": {
+        "data": {
+            "host": "http://localhost",
+            "port": 8080,
+            "name": "Data-Mining Service"
+        },
+        "front": {
+            "host": "http://localhost",
+            "port": 4200,
+            "name": "User Interface Service"
+        }
+    }
+}
