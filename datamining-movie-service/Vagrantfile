@@ -1,0 +1,28 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/bionic64"
+
+  # config.vm.box_check_update = false
+  # Guest : Port inside vagrant 
+  # Host  : Port access in Mac Machine
+
+  config.vm.network "forwarded_port", guest: 6060, host: 6060
+
+  config.vm.hostname = "Ranushan"
+
+  config.vm.network "private_network", ip: "192.168.33.10"
+
+  # config.vm.network "public_network"
+
+  # config.vm.synced_folder "../data", "/vagrant_data"
+
+  config.vm.provider "virtualbox" do |vb|
+    # Display the VirtualBox GUI when booting the machine
+  #   vb.gui = true
+  #
+    # Customize the amount of memory on the VM:
+    vb.memory = "1024"
+  end
+
+  config.vm.provision "shell", path: "python.sh"
+
+end
