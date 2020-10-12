@@ -9,6 +9,7 @@ import pandas as pd
 import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import sys
 
 ##############################################################
 
@@ -59,39 +60,42 @@ def matching_process(nameOfMovie, nb_matches):
 
     listOfMovies = []
 
-    ## Step 3: Create a column in DF which combines all selected features
-    for feature in features:
-        df[feature] = df[feature].fillna('')
+    try:
+        ## Step 3: Create a column in DF which combines all selected features
+        for feature in features:
+            df[feature] = df[feature].fillna('')
 
-    df["combined_features"] = df.apply(combine_features,axis=1)
+        df["combined_features"] = df.apply(combine_features,axis=1)
 
-    # print "Combined Features:", df["combined_features"].head()
+        # print "Combined Features:", df["combined_features"].head()
 
-    ## Step 4: Create count matrix from this new combined column
-    cv = CountVectorizer()
+        ## Step 4: Create count matrix from this new combined column
+        cv = CountVectorizer()
 
-    count_matrix = cv.fit_transform(df["combined_features"])
+        count_matrix = cv.fit_transform(df["combined_features"])
 
-    ## Step 5: Compute the Cosine Similarity based on the count_matrix
-    cosine_sim = cosine_similarity(count_matrix) 
-    movie_user_likes = nameOfMovie
+        ## Step 5: Compute the Cosine Similarity based on the count_matrix
+        cosine_sim = cosine_similarity(count_matrix) 
+        movie_user_likes = nameOfMovie
 
-    ## Step 6: Get index of this movie from its title
-    movie_index = get_index_from_title(movie_user_likes)
+        ## Step 6: Get index of this movie from its title
+        movie_index = get_index_from_title(movie_user_likes)
 
-    similar_movies = list(enumerate(cosine_sim[movie_index]))
+        similar_movies = list(enumerate(cosine_sim[movie_index]))
 
-    ## Step 7: Get a list of similar movies in descending order of similarity score
-    sorted_similar_movies = sorted(similar_movies,key=lambda x:x[1],reverse=True)
+        ## Step 7: Get a list of similar movies in descending order of similarity score
+        sorted_similar_movies = sorted(similar_movies,key=lambda x:x[1],reverse=True)
 
-    ## Step 8: Print titles of first n movies
-    i=0
-    for element in sorted_similar_movies:
-            listOfMovies.append(get_title_from_index(element[0]))
-            #print(get_title_from_index(element[0]))
-            i=i+1
-            if i>nb_matches:
-                break
+        ## Step 8: Print titles of first n movies
+        i=0
+        for element in sorted_similar_movies:
+                listOfMovies.append(get_title_from_index(element[0]))
+                #print(get_title_from_index(element[0]))
+                i=i+1
+                if i>nb_matches:
+                    break
+    except:
+        print("Unexpected error: ", sys.exc_info()[0])
     
     return listOfMovies
 
@@ -121,22 +125,40 @@ def start_matching():
     getMovie_Name = request.forms.get('movie_name')
     getNb_Matches = request.forms.get('nb_matches')
     
+    if not getMovie_Name:
+        return HTTPResponse(
+            status=200,
+            body="movie_name field is empty"
+        )
+
+    if not getNb_Matches:
+        return HTTPResponse(
+            status=200,
+            body="nb_matches field is empty"
+        )
+
     job_id = str(uuid.uuid4())
     movie_name = str(getMovie_Name)
     nb_matches = int(getNb_Matches)
-    
+
     movies_matching = matching_process(movie_name, nb_matches)
     #print(movies_matching)
 
-    # Creating the ProjectMatching object
-    movie_matching = json.dumps({
+    if not movies_matching:
+        return HTTPResponse(
+            status=200,
+            body="No Matching found for" + " " + "\"" + movie_name + "\"" + " " + "Movie."
+        )
+
+    # Creating the MovieMatching object
+    resultMovie_Matching = json.dumps({
         'id': job_id,
         'movies_matching': movies_matching
     })
 
     return HTTPResponse(
         status=200,
-        body=movie_matching
+        body=resultMovie_Matching
     )
 
 ##############################################################
