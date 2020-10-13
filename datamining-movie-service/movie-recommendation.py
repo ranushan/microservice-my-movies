@@ -10,6 +10,7 @@ import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import sys
+from elasticsearch import Elasticsearch
 
 ##############################################################
 
@@ -31,6 +32,21 @@ features = ['keywords','cast','genres','director']
 ###### STOCK ALL MOVIES ######################################
 
 movies_matching = []
+
+###### ELASTICSEARCH CONFIG ##################################
+
+## Host URL Elasticsearch
+HOST_URLS = ["http://127.0.0.1:9200"]
+
+## Instance of Elasticsearch
+es_conn = Elasticsearch(HOST_URLS)
+# print("Cluster Name : ", es_conn.cluster.state(metric=["cluster_name"])['cluster_name'])
+
+## Create Index for Elasticsearch
+INDEX_NAME = "mymovies-service"
+
+## Create Doc Type for Elasticsearch
+DOC_TYPE = "ranushan"
 
 ##############################################################
 ################## FUNCTIONS #################################
@@ -99,6 +115,10 @@ def matching_process(nameOfMovie, nb_matches):
     
     return listOfMovies
 
+def sendDataToElasticSearch(id, movie_name, nb_matches, movies_matching):
+    data = { "id": id, "movie_name": movie_name, "nb_matches": nb_matches, "movies_matching": movies_matching }
+    res = es_conn.create(index=INDEX_NAME, doc_type=DOC_TYPE, body=data, id=id, refresh=True)
+
 ##############################################################
 ################## CONTROLLERS ###############################
 ##############################################################
@@ -155,6 +175,8 @@ def start_matching():
         'id': job_id,
         'movies_matching': movies_matching
     })
+
+    sendDataToElasticSearch(job_id, movie_name, nb_matches, movies_matching)
 
     return HTTPResponse(
         status=200,
