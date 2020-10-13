@@ -6,6 +6,8 @@ Vagrant.configure("2") do |config|
   # Host  : Port access in Mac Machine
 
   config.vm.network "forwarded_port", guest: 6060, host: 6060
+  config.vm.network "forwarded_port", guest: 9200, host: 9200
+  config.vm.network "forwarded_port", guest: 5601, host: 5601
 
   config.vm.hostname = "Ranushan"
 
@@ -20,7 +22,7 @@ Vagrant.configure("2") do |config|
   #   vb.gui = true
   #
     # Customize the amount of memory on the VM:
-    vb.memory = "1024"
+    vb.memory = "2048"
   end
 
   config.vm.provision "shell", path: "python.sh"
