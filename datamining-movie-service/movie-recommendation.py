@@ -62,6 +62,11 @@ def get_title_from_index(index):
 def get_index_from_title(title):
 	return df[df.title == title]["index"].values[0]
 
+###### GET INDEX BY TITLE OF MOVIES ##########################
+
+def get_id_from_title(title):
+	return df[df.title == title]["id"].values[0]
+
 ###### COMBINE ALL FEATURES ##################################
 
 def combine_features(row):
@@ -74,6 +79,7 @@ def combine_features(row):
 
 def matching_process(nameOfMovie, nb_matches):
 
+    listOfIdsMovies = []
     listOfMovies = []
 
     try:
@@ -105,6 +111,7 @@ def matching_process(nameOfMovie, nb_matches):
         ## Step 8: Print titles of first n movies
         i=0
         for element in sorted_similar_movies:
+                listOfIdsMovies.append(get_id_from_title(get_title_from_index(element[0])))
                 listOfMovies.append(get_title_from_index(element[0]))
                 #print(get_title_from_index(element[0]))
                 i=i+1
@@ -113,10 +120,10 @@ def matching_process(nameOfMovie, nb_matches):
     except:
         print("Unexpected error: ", sys.exc_info()[0])
     
-    return listOfMovies
+    return listOfIdsMovies, listOfMovies
 
-def sendDataToElasticSearch(id, movie_name, nb_matches, movies_matching):
-    data = { "id": id, "movie_name": movie_name, "nb_matches": nb_matches, "movies_matching": movies_matching }
+def sendDataToElasticSearch(id, movie_name, nb_matches, list_of_ids_movies, movies_matching):
+    data = { "id": id, "movie_name": movie_name, "nb_matches": nb_matches, "list_of_ids_movies": list_of_ids_movies, "movies_matching": movies_matching }
     res = es_conn.create(index=INDEX_NAME, doc_type=DOC_TYPE, body=data, id=id, refresh=True)
 
 ##############################################################
@@ -161,22 +168,30 @@ def start_matching():
     movie_name = str(getMovie_Name)
     nb_matches = int(getNb_Matches)
 
-    movies_matching = matching_process(movie_name, nb_matches)
+    movies_id_matching, movies_matching = matching_process(movie_name, nb_matches)
+    #print(movies_id_matching)
     #print(movies_matching)
 
-    if not movies_matching:
+    if not movies_matching or not movies_id_matching:
         return HTTPResponse(
             status=200,
             body="No Matching found for" + " " + "\"" + movie_name + "\"" + " " + "Movie."
         )
 
+    list_of_ids_movies = []
+
+    for listOfIds in movies_id_matching:
+        # print(list_of_ids_movies)
+        list_of_ids_movies.append(str(listOfIds))
+
     # Creating the MovieMatching object
     resultMovie_Matching = json.dumps({
         'id': job_id,
-        'movies_matching': movies_matching
+        'movies_matching': movies_matching,
+        'list_of_ids_movies': list_of_ids_movies
     })
 
-    sendDataToElasticSearch(job_id, movie_name, nb_matches, movies_matching)
+    sendDataToElasticSearch(job_id, movie_name, nb_matches, list_of_ids_movies, movies_matching)
 
     return HTTPResponse(
         status=200,
