@@ -27,6 +27,8 @@ Verify : `curl localhost:5601`
 
 ### RUN MACHINE LEARNING PROGRAMME
 
+`cd /vagrant`
+
 `python3 movie-recommendation.py`
 
 ### POSTMAN
@@ -66,10 +68,18 @@ On Kibana :
 
 Save your Visualization
 
+### CHECK ELASTICSEARCH RESULT
+
+`http://localhost:9200/mymovies-service/ranushan/_search`
+
+### CHECK KIBANA RESULT
+
+`http://localhost:5601`
+
 ### DELETE DOCUMENT
 
-`curl -XDELETE 'localhost:9200/mymovies-service/`
+`curl -XDELETE 'localhost:9200/mymovies-service'`
 
 ### DELETE SPECIFIC DOCUMENT
 
-`curl -XDELETE 'localhost:9200/mymovies-service/{id}`
+`curl -XDELETE 'localhost:9200/mymovies-service/{id}'`
